@@ -33,7 +33,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     defs.append('svg:marker')
       .attr('id', 'end-arrow')
       .attr('viewBox', '0 -5 10 10')
-      .attr('refX', "32")
+      .attr('refX', "7") // where arrow ends up on line
       .attr('markerWidth', 3.5)
       .attr('markerHeight', 3.5)
       .attr('orient', 'auto')
@@ -44,7 +44,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     defs.append('svg:marker')
       .attr('id', 'mark-end-arrow')
       .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 7)
+      .attr('refX', 7) // where arrow ends up on line
       .attr('markerWidth', 3.5)
       .attr('markerHeight', 3.5)
       .attr('orient', 'auto')
@@ -326,13 +326,14 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         placePad  =  5*curScale,
         useHW = curScale > 1 ? nodeBCR.width*0.71 : consts.nodeRadius*1.42;
     // replace with editableconent text
+
     var d3txt = thisGraph.svg.selectAll("foreignObject")
           .data([d])
           .enter()
           .append("foreignObject")
           .attr("x", nodeBCR.left + placePad )
           .attr("y", nodeBCR.top + placePad)
-          .attr("height", 2*useHW)
+          .attr("height", useHW)
           .attr("width", useHW)
           .append("xhtml:p")
           .attr("id", consts.activeEditId)
@@ -508,7 +509,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       .style('marker-end','url(#end-arrow)')
       .classed("link", true)
       .attr("d", function(d){
-        return "M" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y;
+        return "M" + (d.source.x + 20) + "," + (d.source.y + 20) + "L" + d.target.x + "," + d.target.y;
       })
       .on("mousedown", function(d){
         thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
@@ -547,8 +548,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       })
       .call(thisGraph.drag);
 
-    newGs.append("circle")
-      .attr("r", String(consts.nodeRadius));
+    newGs.append("rect")
+      .attr("width", 100)
+      .attr("height", 100);
 
     newGs.each(function(d){
       thisGraph.insertTitleLinebreaks(d3.select(this), d.title);
